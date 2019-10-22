@@ -1,5 +1,7 @@
 \name{getData}
 
+ \alias{getData}
+
 \title{Collect information about the package annotation DB}
 
 \description{
