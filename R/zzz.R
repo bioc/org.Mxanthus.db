@@ -1,5 +1,3 @@
-library(AnnotationDBI)
-library(AnnotationHub)
 
 getData <- function(){
     ah <- AnnotationHub()
