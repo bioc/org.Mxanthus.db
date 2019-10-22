@@ -1,0 +1,7 @@
+library(AnnotationDBI)
+library(AnnotationHub)
+
+getData <- function(){
+    ah <- AnnotationHub()
+    query(ah, c("Myxococcus xanthus DK 1622", "org.Mxanthus.eg.db"))[[1]
+}
