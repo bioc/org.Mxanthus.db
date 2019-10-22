@@ -10,9 +10,6 @@
   getData()
 }
 
-\arguments{
-}
-
 \value{
   \code{getData}: a OrgDb object.
 }
