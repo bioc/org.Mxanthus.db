@@ -1,3 +1,5 @@
+org.Mxanthus.egORGANISM <- "Myxococcus xanthus DK 1622"
+
 
 getData <- function(){
     ah <- AnnotationHub()
