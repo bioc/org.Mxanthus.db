@@ -6,11 +6,7 @@ import(AnnotationHub)
 ### created at load time are dynamically exported (refer to R/zzz.R for
 ### the details).
 export(
-    org.Mxanthus.eg,
-    org.Mxanthus.eg_dbconn,
-    org.Mxanthus.eg_dbfile,
-    org.Mxanthus.eg_dbschema,
-    org.Mxanthus.eg_dbInfo,
+    getData,
 
     org.Mxanthus.egORGANISM
 )
