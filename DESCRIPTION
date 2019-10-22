@@ -6,7 +6,7 @@ Author: Eduardo Illueca Fernandez
 Maintainer: Eduardo Illueca Fernandez <eduardo.illueca@um.es>
 Depends: R (>= 2.7.0), methods, AnnotationDbi (>= 1.46.0)
 Suggests: DBI, annotate, RUnit
-Imports: methods, AnnotationDbi
+Imports: methods, AnnotationDbi, AnnotationHub
 License: Artistic-2.0
 organism: Myxococcus xanthus DK 1622
 species: Myxococcus xanthus DK 1622
