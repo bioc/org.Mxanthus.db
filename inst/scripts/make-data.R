@@ -27,6 +27,15 @@ GO_myxo <- read_tsv("GO_data.tsv")
 
 up_refseq <- read_tsv("up_data")
 
+up_refseq_env <- new.env()
+i <- 1
+
+for(u in up_refseq$To){
+  
+  up_refseq_env[[u]] <- up_refseq$From[i]
+  i <- i+1
+  
+}
 
 proteins <- up_refseq$To
 cds <- genome_myxo[genome_myxo$"X3" == "CDS",]
@@ -36,6 +45,7 @@ descriptions_genes <- genes$"X9"
 
 product <-  c()
 id_protein <- c()
+name <- c()
 
 #I create a data.frame that associates the ID of each gene in the RefSeq file with its corresponding
 #Refseq protein ID
@@ -44,13 +54,25 @@ for (d in descriptions_cds){
   d <- strsplit(d, ";")
   product <- c(product,substring(d[[1]][4],6))
   id_protein <- c(id_protein,substring(d[[1]][2],8))
+  
+  if(grepl("product",substring(d[[1]][7],1))){
+    
+    name <- c(name,substring(d[[1]][7],9) )
 
+  } else{
+    
+    name <- c(name,substring(d[[1]][8],9) )
+    
+  }
+  
 }
 
-proteins <- data.frame(id=id_protein,protein=product)
+proteins <- data.frame(id=id_protein,protein=product,gene_name=name)
 
 mxanes <- c()
 id_mxan <- c()
+old_mxan <- c()
+
 
 #I get the mxan code and add it to the data frame genes (associates every ID of the gene with its MXAN)
 
@@ -59,13 +81,64 @@ for (d in descriptions_genes){
   mxanes <- c(mxanes,substring(d[[1]][2],6))
   id_mxan <- c(id_mxan,substring(d[[1]][1],4))
   
+  if(grepl("old",substring(d[[1]][6],1))){
+    
+    old <- substring(d[[1]][6],15)
+    if(is.na(old)){
+      
+      old_mxan <- c(old_mxan,"No old locus tag")
+      
+    } else{
+      
+      old_mxan <- c(old_mxan,old)
+      
+    }
+    
+    
+  } else{
+    
+    old <- substring(d[[1]][7],15)
+    
+    if(is.na(old)){
+      
+      old_mxan <- c(old_mxan,"No old locus tag")
+      
+    } else{
+      
+      old_mxan <- c(old_mxan,old)
+      
+    }
+    
+  }
 }
 
-genes <- data.frame(id=id_mxan,gene=mxanes)
+genes <- data.frame(id=id_mxan,gene=mxanes,old=old_mxan)
 
 #I associate each MXAN with its protein in RefSeq
 
 proteins_genes <- merge(proteins,genes)
+
+up_id <- c()
+i <- 1
+
+for (w in proteins_genes$protein ){
+  
+  print (up_refseq_env[[w]])
+  if(is.null(up_refseq_env[[w]])){
+    
+    up_id <- c(up_id, "No Uniprot ID")
+    
+  } else {
+    
+    up_id <- c(up_id, up_refseq_env[[w]])
+    
+  }
+  
+    i <- i+1
+  
+}
+
+proteins_genes$up_id <- up_id
 
 names(up_refseq)[c(1)] <-c("ID")
 names(up_refseq)[c(2)] <-c("protein")
@@ -85,7 +158,7 @@ final_database <- merge(GO_Ref,proteins_genes)
 #A frame data is created that associates the different genes ID across the genome. It is called
 #universe (following the clusterProfiler nomenclature)
 
-gene_info <- data.frame(ID = proteins_genes$id, SYMBOL = proteins_genes$gene)
+gene_info <- data.frame(ID = proteins_genes$id, SYMBOL = proteins_genes$gene, NAME = proteins_genes$gene_name, REFSEQ_PROTEIN = proteins_genes$protein, UNIPROT = proteins_genes$up_id, OLD_MXAN = proteins_genes$old)
 gene_info <- gene_info[!duplicated(gene_info), ]
 gene_info$GID <- c(1:length(gene_info$ID))
 
@@ -109,7 +182,7 @@ go <- data.frame(GID = go$GID, GO = go$GO.TERM, EVIDENCE = go$EVIDENCE)
 
 #From the universe, I take only the ID and a column called symbol (MXAN ID)
 
-gene_info <- data.frame(GID = gene_info$GID, SYMBOL = gene_info$SYMBOL)
+gene_info <- data.frame(GID = gene_info$GID, SYMBOL = gene_info$SYMBOL, NAME =gene_info$NAME, REFSEQ_PROTEIN = gene_info$REFSEQ_PROTEIN, UNIPROT = gene_info$UNIPROT, OLD_MXAN = gene_info$OLD_MXAN)
 gene_info <- gene_info[!(is.na(gene_info$SYMBOL)), ]
 
 #The package is created and the .sql file (org.Mxanthus.eg.db/inst/exdata) is stored
