@@ -1,0 +1,75 @@
+---
+title: "org.Mxanthus.eg.db"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE)
+```
+
+## 1. Introduction
+
+_Myxococcus xanthus_ is a gram-negative, rod-shaped species of myxobacteria that exhibits various forms of self-organizing behavior as a response to environmental cues. Under normal conditions with abundant food, it exists as a predatory, saprophytic single-species biofilm called a swarm. Under starvation conditions, it undergoes a multicellular development cycle. In the recent years, it becomes so important due to its complex regulation networks and it is important its genomic study.
+So, `org.Mxanthus.eg.db` is a OrgDb package that uses `AnnotationHub` to store the data. The purpose of this package is to provide the user with a database to collect information about the organism _Myxococcus xanthus_ DK 1622 and to use this information in other bioinformatics tasks, such as enrichment analysis. Therefore, this manual will show the use of this package as an API to map different identifiers in _Myxococcus xanthus_ DK 1622 and its use combined with other packages such as `clusterProfiler`.
+
+## 2. API use
+
+You can check all the keytypes that `org.Mxanthus.eg.db` supports :
+
+```{r 1, echo=TRUE}
+library(org.Mxanthus.eg.db)
+keytypes(org.Mxanthus.eg.db)
+```
+
+It is equivalent to use the `columns` method
+
+```{r 2, echo=TRUE}
+columns(org.Mxanthus.eg.db)
+```
+
+You can also do some simple querys with `select` that could help you to match differents keytypes. For example, if you want to know the SYMBOL, the UNIPROT ID, and the gene NAME you could use something similar.
+
+```{r 3, echo=TRUE}
+select(org.Mxanthus.eg.db, keys="7179", columns=c("SYMBOL","UNIPROT","NAME"))
+```
+
+Or more complex querys:
+
+```{r 4}
+select(org.Mxanthus.eg.db, keys="2000", columns=c("SYMBOL","GO"))
+```
+
+An other important of `org.Mxanthus.eg.db` is that it support the old locus tag (MXAN). All research that works with _Myxococcus xanthus_ use this code to identify each gene, but in the new NCBI version this code has changed. So, `org.Mxanthus.eg.db` could map the new code with the old code.
+
+```{r 5}
+select(org.Mxanthus.eg.db, keys="2000", columns=c("SYMBOL","OLD_MXAN"))
+```
+
+## 3. Use with `clusterProfiler`
+
+You could use the `bitr` method to map a set of genes
+
+```{r 6, echo=TRUE}
+library(clusterProfiler)
+
+genes <- c("MXAN_RS16025", "MXAN_RS15990", "MXAN_RS15970","MXAN_RS15970","MXAN_RS01760","MXAN_RS05130","MXAN_RS12955", "MXAN_RS20515","hisH")
+
+bitr(genes, fromType="SYMBOL", toType="OLD_MXAN", OrgDb=org.Mxanthus.eg.db)
+```
+
+And also you could use some `clusterProfiler` related to GO enrichment analysis such as `groupGO` or `enrichGO`
+
+```{r 7 , echo=TRUE, eval = TRUE}
+ggo <- groupGO(gene     = genes,
+               OrgDb    = org.Mxanthus.eg.db,
+               keyType = "SYMBOL",
+               ont      = "MF",
+               level    = 3)
+
+barplot(ggo, drop=TRUE, showCategory=25)
+```
+
+It is also compatible with the `enrichGO` method:
+
