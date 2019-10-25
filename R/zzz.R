@@ -1,4 +1,4 @@
-org.Mxanthus.egORGANISM <- "Myxococcus xanthus DK 1622"
+org.MxanthusORGANISM <- "Myxococcus xanthus DK 1622"
 
 
 getData <- function(){
