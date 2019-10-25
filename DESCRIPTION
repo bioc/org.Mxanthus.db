@@ -1,4 +1,4 @@
-Package: org.Mxanthus.eg.db
+Package: org.Mxanthus.db
 Title: Genome wide annotation for Myxococcus xanthus DK 1622
 Description: Genome wide annotation for Myxococcus xanthus DK 1622, primarily based on mapping using Entrez Gene identifiers.
 Version: 1.0.10
