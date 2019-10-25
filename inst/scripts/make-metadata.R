@@ -14,7 +14,7 @@ meta <- data.frame(
   RDataClass = "character",
   DispatchClass = "SQLiteFile",
   ResourceName = "org.Mxanthus.sqlite",
-  RDataPath = "org.Mxanthus.db/org.Mxanthus.sqlite",
+  RDataPath = "org.Mxanthus.db/org.Mxanthus.db.sqlite",
   Tags = c("GO_annotation:Myxococcus xanthus:clusterProfiler")
 )
 
