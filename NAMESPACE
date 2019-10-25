@@ -9,6 +9,6 @@ import(AnnotationHub)
 export(
     getData,
 
-    org.Mxanthus.egORGANISM
+    org.MxanthusORGANISM
 )
 
