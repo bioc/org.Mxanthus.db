@@ -11,6 +11,6 @@ getData <- function(){
 .onLoad <- function(libname, pkgname){
   
   
-  makeActiveBinding("org.Mxanthus.eg.db", getData , .GlobalEnv)
+  makeActiveBinding("org.Mxanthus.db", getData , .GlobalEnv)
   
 }
