@@ -13,6 +13,18 @@
   in a walkthrough on the bioconductor website as well as in the manual
   pages and vignettes in the AnnotationDbi package.
 }
+
+\examples{
+## Obtain the keytypes supported by org.Mxanthus.eg.db
+
+keytypes(org.Mxanthus.db)
+
+## Show the metadata information about the database
+
+show(org.Mxanthus.db)
+
+}
+
 \keyword{datasets}
 
 
