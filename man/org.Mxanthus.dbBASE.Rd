@@ -1,13 +1,12 @@
-\name{org.Mxanthus.eg.db}
-\alias{org.Mxanthus.eg.db}
-\alias{org.Mxanthus.eg}
+\name{org.Mxanthus.db}
+\alias{org.Mxanthus.db}
 \title{Bioconductor annotation data package}
 \description{
 
-  Welcome to the org.Mxanthus.eg.db annotation Package.  This is an
+  Welcome to the org.Mxanthus.db annotation Package.  This is an
   organism specific package. The purpose is to provide detailed
   information about the species abbreviated in the second part of the
-  package name org.Mxanthus.eg.db. This package is updated biannually.
+  package name org.Mxanthus.db. This package is updated biannually.
 
   To learn more about this package, users are encouraged to learn about
   the select, columns, keys and keytypes methods.  These are described
@@ -16,12 +15,6 @@
 }
 \keyword{datasets}
 
-\examples{
-
-  ah = AnnotationHub()
-  query(ah, c("Myxococcus xanthus DK 1622", "org.Mxanthus.eg.db"))[[1]]
-
-}
 
 
 
