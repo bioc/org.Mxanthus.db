@@ -1,14 +1,14 @@
-\name{org.Mxanthus.egORGANISM}
-\alias{org.Mxanthus.egORGANISM}
-\title{The Organism for org.Mxanthus.eg}
+\name{org.Mxanthus.dbORGANISM}
+\alias{org.Mxanthus.dbORGANISM}
+\title{The Organism for org.Mxanthus.db}
 \description{
-  org.Mxanthus.egORGANISM is an R object that contains a single item: a
-  character string that names the organism for which org.Mxanthus.eg was built.
+  org.Mxanthus.dbORGANISM is an R object that contains a single item: a
+  character string that names the organism for which org.Mxanthus.db was built.
 }
 
 \details{
   Although the package name is suggestive of the organism for which it
-  was built, org.Mxanthus.egORGANISM provides a simple way to programmatically
+  was built, org.Mxanthus.dbORGANISM provides a simple way to programmatically
   extract the organism name.
 }
 
@@ -25,7 +25,7 @@
 ## from the AnnotationDbi package. See ?select for details.
 
 ## Bimap interface:
-org.Mxanthus.egORGANISM
+org.Mxanthus.dbORGANISM
 }
 
 \keyword{datasets}
