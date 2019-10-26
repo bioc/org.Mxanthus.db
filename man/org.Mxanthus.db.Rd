@@ -3,7 +3,7 @@
 \title{The Data for org.Mxanthus.db}
 \description{
   org.Mxanthus.db is an OrgDb object that stores the data from Annotation Hub that links
-  each gene of the Genome with its corresponding GO terms.
+  each gene of the Genome with its corresponding GO terms and other biological identifiers.
 }
 
 
