@@ -1,5 +1,5 @@
-\name{org.Mxanthus.db}
-\alias{org.Mxanthus.db}
+\name{org.Mxanthus.dbBASE}
+\alias{org.Mxanthus.dbBASE}
 \title{Bioconductor annotation data package}
 \description{
 
