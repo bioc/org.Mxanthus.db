@@ -1,0 +1,9 @@
+CHANGES IN VERSION 1.0.17
+------------------------
+
+NEW FEATURES
+
+    o This is the first version of the package. The principal purpose of the package is to obtain a orgDb object that stores
+    the genome wide annotation for Myxococcus xanthus DK 1622. As all orgDb packages, it allows to do simples queries, more
+    complex SQL queries with DBI and enrichment analysis with clusterProfiler. The principal advantage of this package is that
+    the data is stored in AnnotationHub, so the user do not need to download and store it with the package.
