@@ -1,0 +1,134 @@
+---
+title: "org.Mxanthus.eg.db"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE)
+```
+
+## 1. Introduction
+
+_Myxococcus xanthus_ is a gram-negative, rod-shaped species of myxobacteria that exhibits various forms of self-organizing behavior as a response to environmental cues. Under normal conditions with abundant food, it exists as a predatory, saprophytic single-species biofilm called a swarm. Under starvation conditions, it undergoes a multicellular development cycle. In the recent years, it becomes so important due to its complex regulation networks and it is important its genomic study.
+So, `org.Mxanthus.db` is a OrgDb package that uses `AnnotationHub` to store the data. The purpose of this package is to provide the user with a database to collect information about the organism _Myxococcus xanthus_ DK 1622 and to use this information in other bioinformatics tasks, such as enrichment analysis. Therefore, this manual will show the use of this package as an API to map different identifiers in _Myxococcus xanthus_ DK 1622 and its use combined with other packages such as `clusterProfiler`.
+
+## 2. API use
+
+The you can check all the keytypes that `org.Mxanthus.db` supports :
+
+```{r A, echo=TRUE, eval=TRUE, message=FALSE}
+
+library(org.Mxanthus.db)
+
+```
+
+
+```{r 1, echo=TRUE}
+
+keytypes(org.Mxanthus.db)
+```
+
+
+It is equivalent to use the `columns` method
+
+```{r 2, echo=TRUE}
+columns(org.Mxanthus.db)
+```
+
+You can also do some simple querys with `select` that could help you to match differents keytypes. For example, if you want to know the SYMBOL, the UNIPROT ID, and the gene NAME you could use something similar.
+
+```{r 3, echo=TRUE}
+select(org.Mxanthus.db, keys="7179", columns=c("SYMBOL","UNIPROT","NAME"))
+```
+
+Or more complex querys:
+
+```{r 4}
+select(org.Mxanthus.db, keys="2000", columns=c("SYMBOL","GO"))
+```
+
+An other important of `org.Mxanthus.db` is that it support the old locus tag (MXAN). All research that works with _Myxococcus xanthus_ use this code to identify each gene, but in the new NCBI version this code has changed. So, `org.Mxanthus.db` could map the new code with the old code.
+
+```{r 5}
+select(org.Mxanthus.db, keys="2000", columns=c("SYMBOL","OLD_MXAN"))
+```
+
+## 3. Queries with SQL
+
+The main disadvantage of the above methods is that they are based on the GID column. This represents an arbitrary number that is assigned to each gene and acts as the primary key. However, it has no biological significance. Another way to make more complex queries is to use the `DBI` package, which allows to perfor SQL queries. First, a connection with the SQL database stored in AnnotationHub is established. This connection is saved in the `connection` variable
+
+```{r 6, echo=TRUE, message=FALSE}
+library(DBI)
+
+connection <- dbconn(org.Mxanthus.db)
+```
+
+The database is structured in three tables. The first is gene_info table that links each gene with their corresponding SYMBOL, NAME (it is a description of the product), REFSEQ_PROTEIN (the RefSeq id of the product), UNIPROT and OLD_MXAN. The second table is go table and links each GO(GO_Term and acts as primary key) with their corresponding EVIDENCE, ONTOLOGY and GID(this acts as foreign key). The third table is not so important because it links each gene with its chromosome, but _Myxococcus xanthus_ DK 1622 has only one chromosome. You can see the three tables qith the following queries.
+
+```{r 7, echo=TRUE, message=FALSE}
+
+gene_info <- dbGetQuery(connection, "SELECT * FROM gene_info")
+go <- dbGetQuery(connection, "SELECT * FROM go")
+chromosome <- dbGetQuery(connection, "SELECT * FROM chromosome")
+```
+
+This first example retrieves all SYMBOL and NAME from _Myxococcus xanthus_ DK 1622 (obviusly, registred in the database)
+
+```{r 8, echo=TRUE, message=FALSE}
+
+query <- dbGetQuery(connection, "SELECT SYMBOL,NAME FROM gene_info")
+```
+
+This second example counts the number of genes stored in the database 
+```{r 9, echo=TRUE, message=FALSE}
+
+query_2 <- dbGetQuery(connection, "SELECT COUNT(*) FROM gene_info")
+```
+
+This is a more complex query. It returns the GO, EVIDENCE and ONTOLOGY for all GO_terms that are part for the BP ontology.
+```{r 10, echo=TRUE, message=FALSE}
+
+query_3 <- dbGetQuery(connection, "SELECT GO,EVIDENCE,ONTOLOGY FROM go WHERE ONTOLOGY = 'BP'")
+```
+## 4. Use with `clusterProfiler`
+
+A great adventage of this package (and for OrgDb packages in general) is that it could be used in combination with `clusterProfiler` to perform GO enrichment analysis. Also, othe interesting method in `clusterProfiler` is `bitr`. You could use the `bitr` function to map a set of genes, as it is showed in this example. There is a set of example genes obtained from de _Myxococcus xanthus_ DK 1622 in the `exampleGene` object (loaded with the package)
+
+```{r 11, echo=TRUE, message=FALSE}
+library(clusterProfiler)
+
+genes <- exampleGene
+
+head(bitr(genes, fromType="SYMBOL", toType="OLD_MXAN", OrgDb=org.Mxanthus.db))
+```
+
+Prior to enrichment analysis, a gene count can be performed. That is, the groupGO method counts the number of genes associated with each GO_term. You could plot your results.
+
+```{r 12, echo=TRUE, eval = TRUE}
+ggo <- groupGO(gene     = genes,
+               OrgDb    = org.Mxanthus.db,
+               keyType = "SYMBOL",
+               ont      = "MF",
+               level    = 3)
+
+barplot(ggo, drop=TRUE, showCategory=25)
+```
+
+The  enrichment analysis consist to determine whether in a group of genes, there is a subset of genes that is over-represented statistically associated with a GO term. To do this, it is necessary to define the universe that is the vector of all defined genes for _Myxococcus xanthus_ DK 1622. You could this with a simple SQL query. Again, you could plot the results.
+
+```{r 13 , echo=TRUE, eval = TRUE}
+universe <- (dbGetQuery(connection, "SELECT SYMBOL FROM gene_info"))$SYMBOL
+  
+ego <- enrichGO(gene          = genes,
+                universe      = universe,
+                keyType       = "SYMBOL",
+                OrgDb         = org.Mxanthus.db,
+                ont           = "BP",
+                pAdjustMethod = "BH",
+                pvalueCutoff  = 0.01,
+                qvalueCutoff  = 0.05)
+
+dotplot(ego)
+```
