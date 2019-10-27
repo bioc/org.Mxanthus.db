@@ -8,6 +8,8 @@ import(AnnotationHub)
 
 export(
 
+    exampleGene,
+
     org.MxanthusORGANISM
 )
 
