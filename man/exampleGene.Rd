@@ -2,7 +2,7 @@
 \alias{exampleGene}
 \title{Example Genes for Myxococcus xanthus}
 
-\description{A set of genes (in the SYMBOL keytype) to perform enrichment analysis with clusterProfiler and org.Mxanthus.db}
+\description{A set of genes (in the SYMBOL keytype) randomly obtained to perform enrichment analysis with clusterProfiler and org.Mxanthus.db}
 
 \examples{
 
