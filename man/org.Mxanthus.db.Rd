@@ -1,5 +1,5 @@
-\name{org.Mxanthus.db}
-\alias{org.Mxanthus.db}
+\name{org.Mxanthus.db object}
+\alias{org.Mxanthus.db object}
 \title{The Data for org.Mxanthus.db}
 \description{
   org.Mxanthus.db is an OrgDb object that stores the data from Annotation Hub that links
