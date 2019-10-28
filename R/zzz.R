@@ -7,8 +7,8 @@ loadOrgMxanthusDb <- local({
     function(value) {
         stopifnot(missing(value))
         if (is.null(ah75133)) {
-            ah <- AnnotationHub::AnnotationHub()
-            ah75133 <<- ah[["AH75133"]]
+            ah <- suppressMessages(AnnotationHub::AnnotationHub())
+            ah75133 <<- ah[["AH75133", verbose=FALSE]]
         }
         ah75133
     }
@@ -17,6 +17,6 @@ loadOrgMxanthusDb <- local({
 .onLoad <- function(libname, pkgname)
 {
     ns <- asNamespace(pkgname)
-    makeActiveBinding("org.Mxanthus.db", loadOrgMxanthusDb , env=ns)
-    namespaceExport(ns, "org.Mxanthus.db")
+    makeActiveBinding(pkgname, loadOrgMxanthusDb , env=ns)
+    namespaceExport(ns, pkgname)
 }
