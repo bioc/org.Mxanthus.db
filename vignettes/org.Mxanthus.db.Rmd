@@ -3,13 +3,11 @@ title: "Genome wide annotation for Myxococcus xanthus DK 1622"
 author: "Eduardo Illueca Fernandez\\
 
         Department of Informatic and Systems, University of Murcia"
-date: "`r Sys.Date()`"
+date: "`2019-30-10`"
 output:
-  prettydoc::html_pretty:
-    theme: cayman
-    highlight: github
-  pdf_document:
-    toc: true
+  BiocStyle::html_document:
+    toc_float: false
+package: org.Mxanthus.db 
 vignette: >
   %\VignetteIndexEntry{Genome wide annotation for Myxococcus xanthus DK 1622}
   %\VignetteEngine{knitr::rmarkdown}
@@ -21,12 +19,12 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE, eval = TRUE)
 ```
 
-## 1. Introduction
+# Introduction #
 
 _Myxococcus xanthus_ is a gram-negative, rod-shaped species of myxobacteria that exhibits various forms of self-organizing behavior as a response to environmental cues. Under normal conditions with abundant food, it exists as a predatory, saprophytic single-species biofilm called a swarm. Under starvation conditions, it undergoes a multicellular development cycle. In the recent years, it becomes so important due to its complex regulation networks and it is important its genomic study.
 So, `org.Mxanthus.db` is a OrgDb package that uses `AnnotationHub` to store the data. The purpose of this package is to provide the user with a database to collect information about the organism _Myxococcus xanthus_ DK 1622 and to use this information in other bioinformatics tasks, such as enrichment analysis. Therefore, this manual will show the use of this package as an API to map different identifiers in _Myxococcus xanthus_ DK 1622 and its use combined with other packages such as `clusterProfiler`.
 
-## 2. API use
+# API use #
 
 The you can check all the keytypes that `org.Mxanthus.db` supports :
 
@@ -67,7 +65,7 @@ An other important of `org.Mxanthus.db` is that it support the old locus tag (MX
 select(org.Mxanthus.db, keys="2000", columns=c("SYMBOL","OLD_MXAN"))
 ```
 
-## 3. Queries with SQL
+# Queries with SQL #
 
 The main disadvantage of the above methods is that they are based on the GID column. This represents an arbitrary number that is assigned to each gene and acts as the primary key. However, it has no biological significance. Another way to make more complex queries is to use the `DBI` package, which allows to perfor SQL queries. First, a connection with the SQL database stored in AnnotationHub is established. This connection is saved in the `connection` variable
 
@@ -104,7 +102,7 @@ This is a more complex query. It returns the GO, EVIDENCE and ONTOLOGY for all G
 
 query_3 <- dbGetQuery(connection, "SELECT GO,EVIDENCE,ONTOLOGY FROM go WHERE ONTOLOGY = 'BP'")
 ```
-## 4. Use with `clusterProfiler`
+# Use with `clusterProfiler` #
 
 A great adventage of this package (and for OrgDb packages in general) is that it could be used in combination with `clusterProfiler` to perform GO enrichment analysis. Also, othe interesting method in `clusterProfiler` is `bitr`. You could use the `bitr` function to map a set of genes, as it is showed in this example. There is a set of example genes obtained from de _Myxococcus xanthus_ DK 1622 in the `exampleGene` object (loaded with the package)
 
