@@ -25,7 +25,7 @@
 ## from the AnnotationDbi package. See ?select for details.
 
 ## Bimap interface:
-org.Mxanthus.dbORGANISM
+name <- org.Mxanthus.dbORGANISM
 }
 
 \keyword{datasets}
