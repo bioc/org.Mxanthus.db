@@ -6,9 +6,6 @@ Authors@R: c(
     person("Eduardo", "Illueca Fernández", email = "eduardo.illueca@um.es", role = c("aut", "cre")),
     person("Jesualdo Tomás", "Fernández-Breis", email = "jfernand@um.es", role = "aut")
     )
-Author: Eduardo Illueca Fernández [aut, cre],
-  Jesualdo Tomás Fernández-Breis [aut]
-Maintainer: Eduardo Illueca Fernandez <eduardo.illueca@um.es>
 Date/Publication: 2019-10-30
 Encoding: UTF-8
 Depends: R (>= 2.7.0), methods, AnnotationHub (>= 1.46.0), AnnotationDbi
