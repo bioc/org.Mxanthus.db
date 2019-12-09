@@ -39,9 +39,9 @@ for(u in up_refseq$To){
 
 proteins <- up_refseq$To
 cds <- genome_myxo[genome_myxo$"X3" == "CDS",]
-genes <- genome_myxo[genome_myxo$"X3" == "gene",]
+gene <- genome_myxo[genome_myxo$"X3" == "gene",]
 descriptions_cds <- cds$"X9"
-descriptions_genes <- genes$"X9"
+descriptions_genes <- gene$"X9"
 
 product <-  c()
 id_protein <- c()
@@ -67,11 +67,12 @@ for (d in descriptions_cds){
   
 }
 
-proteins <- data.frame(id=id_protein,protein=product,gene_name=name)
+proteins <- data.frame(id=id_protein,protein=product,gene_name=as.character(name))
 
 mxanes <- c()
 id_mxan <- c()
 old_mxan <- c()
+locus_tag <- c()
 
 
 #I get the mxan code and add it to the data frame genes (associates every ID of the gene with its MXAN)
@@ -81,6 +82,16 @@ for (d in descriptions_genes){
   mxanes <- c(mxanes,substring(d[[1]][2],6))
   id_mxan <- c(id_mxan,substring(d[[1]][1],4))
   
+  
+  if(grepl("MXAN",substring(d[[1]][5],11))){
+    
+    locus_tag <- c(locus_tag,substring(d[[1]][5],11))
+    
+  } else {
+    
+    locus_tag <- c(locus_tag,substring(d[[1]][6],11))
+    
+  }
   if(grepl("old",substring(d[[1]][6],1))){
     
     old <- substring(d[[1]][6],15)
@@ -112,7 +123,11 @@ for (d in descriptions_genes){
   }
 }
 
-genes <- data.frame(id=id_mxan,gene=mxanes,old=old_mxan)
+genes <- data.frame(id=id_mxan,gene=mxanes,locus_tag=locus_tag, old=old_mxan)
+
+genes$start <- gene$X4
+
+genes$end <- gene$X5
 
 #I associate each MXAN with its protein in RefSeq
 
@@ -148,7 +163,7 @@ names(GO_myxo)[c(2)] <-c("ID")
 #The primary key would be the column GO TERM
 
 GO_Ref <- merge(GO_myxo, up_refseq)
-GO_Ref <- GO_Ref[,c(1,5,15,8)]
+GO_Ref <- GO_Ref[,c(1,5,6,15,8)]
 
 #All the information is saved in a single database
 
@@ -158,7 +173,7 @@ final_database <- merge(GO_Ref,proteins_genes)
 #A frame data is created that associates the different genes ID across the genome. It is called
 #universe (following the clusterProfiler nomenclature)
 
-gene_info <- data.frame(ID = proteins_genes$id, SYMBOL = proteins_genes$gene, NAME = proteins_genes$gene_name, REFSEQ_PROTEIN = proteins_genes$protein, UNIPROT = proteins_genes$up_id, OLD_MXAN = proteins_genes$old)
+gene_info <- data.frame(ID = proteins_genes$id, SYMBOL = proteins_genes$gene, LOCUS_TAG = proteins_genes$locus_tag, NAME = proteins_genes$gene_name, REFSEQ_PROTEIN = proteins_genes$protein, UNIPROT = proteins_genes$up_id, OLD_MXAN = proteins_genes$old, START = proteins_genes$start, END = proteins_genes$end, PARENT = proteins_genes$id)
 gene_info <- gene_info[!duplicated(gene_info), ]
 gene_info$GID <- c(1:length(gene_info$ID))
 
@@ -175,15 +190,29 @@ chromosome$GID <- c(1:length(chromosome$GID))
 #the real key is the term GO, but I  it is necessary to put always the ID of the gene
 #in the first coumn.
 
-go <- data.frame( ID = final_database$"id", "GO TERM" = final_database$"GO TERM", EVIDENCE = final_database$"GO EVIDENCE CODE")
+go <- data.frame( ID = final_database$"id", "GO TERM" = final_database$"GO TERM", "GO NAME" = final_database$"GO NAME", EVIDENCE = final_database$"GO EVIDENCE CODE")
 go <- go[!duplicated(go), ]
 go <- merge(go, gene_info)
 go <- data.frame(GID = go$GID, GO = go$GO.TERM, EVIDENCE = go$EVIDENCE)
 
+
+
 #From the universe, I take only the ID and a column called symbol (MXAN ID)
 
-gene_info <- data.frame(GID = gene_info$GID, SYMBOL = gene_info$SYMBOL, NAME =gene_info$NAME, REFSEQ_PROTEIN = gene_info$REFSEQ_PROTEIN, UNIPROT = gene_info$UNIPROT, OLD_MXAN = gene_info$OLD_MXAN)
+gene_info <- data.frame(GID = gene_info$GID, SYMBOL = gene_info$SYMBOL, LOCUS_TAG = gene_info$LOCUS_TAG, NAME = as.character(gene_info$NAME), REFSEQ_PROTEIN = gene_info$REFSEQ_PROTEIN, UNIPROT = gene_info$UNIPROT, OLD_MXAN = gene_info$OLD_MXAN, START = gene_info$START, END = gene_info$END, PARENT = gene_info$ID, stringsAsFactors = FALSE)
 gene_info <- gene_info[!(is.na(gene_info$SYMBOL)), ]
+
+#Finally, some NAMEs values are corrected.
+
+for (g in gene_info[grepl("=",gene_info$NAME),]$GID){
+  
+  gene_info[gene_info$GID == g,]$NAME <- as.character(gene_info[gene_info$GID == g,]$SYMBOL)
+  
+} 
+
+
+
+
 
 #The package is created and the .sql file (org.Mxanthus.eg.db/inst/exdata) is stored
 
