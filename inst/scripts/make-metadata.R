@@ -1,5 +1,5 @@
 meta <- data.frame(
-  Title = "Genome wide annotation for Myxococcus xanthus DK 1622",
+  Title = c("Genome wide annotation for Myxococcus xanthus DK 1622"),
   Description = "Genome wide annotation for Myxococcus xanthus DK 1622, primarily based on mapping using Gene identifiers",
   BiocVersion = "3.10",
   Genome = "GCF_000012685.1",
@@ -13,9 +13,9 @@ meta <- data.frame(
   Maintainer = "Eduardo Illueca Fernandez <eduardo.illueca@um.es>",
   RDataClass = "character",
   DispatchClass = "SQLiteFile",
-  ResourceName = "org.Mxanthus.sqlite",
-  RDataPath = "org.Mxanthus.db/org.Mxanthus.db.sqlite",
+  ResourceName = c("org.Mxanthus.db.sqlite","org.Mxanthus.db1.1.sqlite"),
+  RDataPath = c("org.Mxanthus.db/org.Mxanthus.db.sqlite", "org.Mxanthus.db/org.Mxanthus.db1.1.sqlite"),
   Tags = c("GO_annotation:Myxococcus xanthus:clusterProfiler")
 )
 
-write.csv(meta,"../extdata/metadata.csv", row.names = FALSE)
+write.csv(meta,"../exdata/metadata.csv", row.names = FALSE)
