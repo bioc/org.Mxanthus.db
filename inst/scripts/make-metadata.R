@@ -1,6 +1,6 @@
 meta <- data.frame(
   Title = c("Genome wide annotation for Myxococcus xanthus DK 1622"),
-  Description = "Genome wide annotation for Myxococcus xanthus DK 1622, primarily based on mapping using Gene identifiers",
+  Description = "New version of genome wide annotation for Myxococcus xanthus DK 1622, primarily based on mapping using Gene identifiers, that supports new identifiers such as PARENT, START and END",
   BiocVersion = "3.10",
   Genome = "GCF_000012685.1",
   SourceType = "TSV",
