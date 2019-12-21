@@ -7,9 +7,8 @@ versions <- new.env()
 versions[["1.0"]] <- "AH75133"
 
 loadOldData <- function(v){
-    
+    ah <- suppressMessages(AnnotationHub::AnnotationHub())
     return(ah[[versions[[v]], verbose=FALSE]])
-    
 }
 
 loadOrgMxanthusDb <- function() {
