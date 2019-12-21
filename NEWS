@@ -7,3 +7,10 @@ NEW FEATURES
     the genome wide annotation for Myxococcus xanthus DK 1622. As all orgDb packages, it allows to do simples queries, more
     complex SQL queries with DBI and enrichment analysis with clusterProfiler. The principal advantage of this package is that
     the data is stored in AnnotationHub, so the user do not need to download and store it with the package.
+
+CHANGES IN VERSION 1.1.0
+------------------------
+
+NEW FEATURES
+
+    o This new version of the package has access to a new version of the database in AnnotationHub, which supports new identifiers such as PARENT, START and END. It also incorporates the loadOldData 	       function that allows you to work with older versions of the database that are stored in AnnotationHub. So far, the only old version is the 1.0

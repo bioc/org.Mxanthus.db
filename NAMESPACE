@@ -12,6 +12,11 @@ export(
 
     exampleGene,
 
-    org.Mxanthus.dbORGANISM
+    org.Mxanthus.dbORGANISM,
+
+    versions,
+
+    loadOldData
+
 )
 
