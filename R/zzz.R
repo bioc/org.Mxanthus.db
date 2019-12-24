@@ -4,7 +4,7 @@ exampleGene <- c('MXAN_RS17185','MXAN_RS24660','MXAN_RS14900','MXAN_RS22750','MX
 
 versions <- new.env()
 
-versions[["1.0"]] <- "AH75133"
+versions[["1.0.0"]] <- "AH75133"
 
 loadOldData <- function(v){
     ah <- suppressMessages(AnnotationHub::AnnotationHub())

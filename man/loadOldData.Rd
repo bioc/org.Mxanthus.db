@@ -13,7 +13,7 @@
 
 \examples{
 
-old_version = loadOldData("1.0")
+old_version = loadOldData("1.0.0")
 
 }
 
